@@ -11,7 +11,7 @@ This script is used in a server to watch [Kind](https://github.com/uwu-tech/Kind
 
 ### TODO:
 [ ] Build only the app that changed  
-[ ] Only allow GitHub to use route `/on_push`  
+[x] Only allow GitHub to use route `/on_push`  
 [ ] Automatic pull on every call in `/on_push`  
  
 
