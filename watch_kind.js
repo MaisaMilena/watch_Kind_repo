@@ -10,12 +10,11 @@ app.use(body_parser.json());
 app.get('/', (req, res) => {
   res.send('Hello from Belanna and Neelix!')
 })
-// TODO: pull on every push
+
 // This route is used by Github on every "push" to Github/uwu-tech/Kind
 // Read more: https://docs.github.com/en/developers/webhooks-and-events/webhooks/about-webhooks
 app.post('/on_push', (req, res) => {
-  let sig = req.get("X-Hub-Signature-256");
-  console.log(sig);
+  const sig = req.get("X-Hub-Signature-256");
   if (utils.verify_signature(sig, req.body)) {
     let rebuild_apps = utils.is_App_updated(req.body);
     if (rebuild_apps) {
