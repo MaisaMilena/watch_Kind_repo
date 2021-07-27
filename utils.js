@@ -21,7 +21,7 @@ function get_modified_files(payload) {
   }
 }
 
-// Check if files inside dir "Kind/base/App" on branch "master" were changed
+// Check if files inside "Kind/base/App" on branch "master" have been modified
 function is_App_updated(payload) {
   if (is_branch("master", payload) || is_branch("main", payload)) {
     const content = get_modified_files(payload).filter(path => path.startsWith("base/App/"))
@@ -65,4 +65,4 @@ function verify_signature(github_sig, body) {
   }
 }
 
-module.exports = { is_App_updated, rebuild_apps, verify_signature }
+module.exports = { is_App_updated, rebuild_apps, rebuild_app, verify_signature }

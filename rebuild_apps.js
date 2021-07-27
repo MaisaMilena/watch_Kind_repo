@@ -1,5 +1,4 @@
-var fs = require("fs");
-var {exec, execSync} = require("child_process");
+var { execSync } = require("child_process");
 var { chdir, cwd } = require('process');
 
 // TODO: 
@@ -10,17 +9,28 @@ var { chdir, cwd } = require('process');
 console.log(`Starting directory: ${cwd()}`);
 try {
   chdir('../Kind/web');
-  console.log(String(execSync("git pull")));
-  console.log(compile_apps(cwd()));
+  // pull_master();
+  let app_name = process.argv[2];
+  console.log(String(app_name ? build_apps(app_name) : build_apps()));
 } catch (e) {
   console.error(e);
 }
 
-function compile_apps(kind_dir) {
-  if (kind_dir.endsWith("Kind/web")) {
-    console.log("[!] Compiling apps. This will take some time\n");
-    return String(execSync("node build"));
-  } else {
-    throw new Error('Kind dir not found.');
-  }
+// Build apps from base/App
+function build_apps(name = "") {
+  console.log("[!] Building apps. This may take a while.\n");
+  return execSync('node build '+name, function (error, stdout, stderr) {
+    if(error) {
+      console.log(error.stack);
+    }
+    stdout;
+  });
+}
+
+// TODO: 
+// - check if is branch master
+// - check for conflict in pull
+function pull_master() {
+  cwd();
+  return String(execSync("git pull"));
 }
