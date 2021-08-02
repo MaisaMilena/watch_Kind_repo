@@ -10,7 +10,7 @@ function get_modified_files(payload) {
     payload["commits"].forEach(commit => {
       const modified = commit["modified"];
       const added    = commit["added"];
-      content = modified.concat(added)
+      content = content.concat(modified.concat(added));
     });
     return content;
   } catch (e) {
@@ -60,15 +60,25 @@ function get_app_folder(path) {
   return path.split("/")[2];
 }
 
+function is_app(path){
+  return path.startsWith("base/App/");
+}
+
 function get_app_name(path) {
   let name = get_app_folder(path);
-  return name.endsWith(".kind") ? name : name+".kind";
+  return is_app(path) 
+    ? name.endsWith(".kind") ? name : name+".kind"
+    : "";
 }
 
 function create_comparison_signature(body) {
-  const hmac = createHmac('sha256', process.env.SECRET_TOKEN);
-  const self_signature = hmac.update(JSON.stringify(body)).digest('hex');
-  return `sha256=${self_signature}`; // shape in GitHub header
+  try {
+    const hmac = createHmac('sha256', process.env.SECRET_TOKEN);
+    const self_signature = hmac.update(JSON.stringify(body)).digest('hex');
+    return `sha256=${self_signature}`; // shape in GitHub header
+  } catch (e) {
+    return "";
+  }
 }
 
 function compare_signatures(signature, comparison_signature) {

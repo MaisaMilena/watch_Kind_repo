@@ -36,7 +36,10 @@ function got_build_error() {
 function get_apps(payload) {
   let files = utils.get_modified_files(payload);
   var apps_name = new Set([]);
-  files.forEach(file => { apps_name.add(utils.get_app_name(file)) });
+  files.forEach(file => {
+    let app_name = utils.get_app_name(file);
+    app_name ? apps_name.add(app_name) : apps_name
+    });
   return apps_name;
 }
 
