@@ -10,7 +10,7 @@ function get_modified_files(payload) {
     payload["commits"].forEach(commit => {
       const modified = commit["modified"];
       const added    = commit["added"];
-      content = modified.concat(added).concat(removed)
+      content = modified.concat(added)
     });
     return content;
   } catch (e) {
