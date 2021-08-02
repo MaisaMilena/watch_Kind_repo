@@ -1,6 +1,7 @@
 const express = require('express');
 const body_parser = require("body-parser");
 const utils = require("./utils");
+const rebuild = require("./rebuild_apps");
 
 const app = express();
 const port = 3000;
@@ -18,8 +19,7 @@ app.post('/on_push', (req, res) => {
   if (utils.verify_signature(sig, req.body)) {
     let rebuild_apps = utils.is_App_updated(req.body);
     if (rebuild_apps) {
-      const res = utils.rebuild_apps().toString();
-      console.log(res);
+      rebuild.build_modified_apps(req.body);
     } else {
       console.log("There isn't app to rebuild");
     }

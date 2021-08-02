@@ -1,9 +1,9 @@
-var {execSync} = require("child_process");
-const { createHmac, timingSafeEqual, sign } =  require('crypto');
+const { createHmac, timingSafeEqual } =  require('crypto');
 require('dotenv/config');
 
 // Get files that were modified in every commit of the event "push" to
 // the "master" branch on GitHub/uwu-tech/Kind.
+// Return modified files or empty array
 function get_modified_files(payload) {
   var content = [];
   try {
@@ -37,11 +37,33 @@ function is_branch(branch, payload) {
   return current_branch.endsWith(branch)
 }
 
-// Change dir to ../Kind and execute Kind/web/build.js
-function rebuild_apps() {
-  console.log("Rebuild apps in Kind/App");
-  const res = execSync("node rebuild_apps");
-  return res;
+// TODO: will be used in the future
+// Change dir to ../Kind and execute Kind/web/build.js to build all apps
+function rebuild_apps(payload) {
+  console.log("Rebuild ALL apps in Kind/App");
+  let mod_apps = get_modified_Apps(get_modified_files(payload));
+
+  // const res = execSync("node rebuild_apps");
+  // return res;
+}
+
+function get_modified_Apps(files) {
+  console.log("Modified files: ", files);
+  return [];
+}
+
+function is_folder(path) {
+  let folders = path.split("/");
+  return (folders.length > 2) && (!folders[2].endsWith(".kind"));
+}
+
+function get_app_folder(path) {
+  return path.split("/")[2];
+}
+
+function get_app_name(path) {
+  let name = get_app_folder(path);
+  return name.endsWith(".kind") ? name : name+".kind";
 }
 
 function create_comparison_signature(body) {
@@ -65,4 +87,5 @@ function verify_signature(github_sig, body) {
   }
 }
 
-module.exports = { is_App_updated, rebuild_apps, rebuild_app, verify_signature }
+module.exports = { get_modified_files, is_App_updated, rebuild_apps, verify_signature, 
+  is_folder, get_app_folder, get_app_name}
