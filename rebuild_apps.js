@@ -22,13 +22,13 @@ function build_modified_apps(payload) {
         });
       console.log(String(res));
     } else {
-      got_build_error();
+      got_build_error(app);
     }
   })
 }
 
 // TODO: do something to re-establish the server
-function got_build_error() {
+function got_build_error(app) {
   console.log("There is a type check error in "+app);
 }
 
