@@ -30,6 +30,7 @@ function build_modified_apps(payload) {
 // TODO: do something to re-establish the server
 function got_build_error(app) {
   console.log("There is a type check error in "+app);
+  console.log("Check for the kind-lang global version.");
 }
 
 // Get a list of Apps to be built based on modified files
