@@ -16,6 +16,11 @@ This script is used in a server to watch [Kind](https://github.com/uwu-tech/Kind
 - Require to be in `master` branch in Kind repository;
 - Route `on_push` is only available to be [used by GitHub](https://stripe.com/docs/webhooks/signatures);
 
+#### Dependencies
+- local `kind-lang` and `js-beautify` updated;
+- local `Kind/web` dependencies updated;
+> There is a function to force this update in `rebuild_apps.js`;
+
 ### 👩‍💻 Install:
 - Clone this repo and Kind in the same root directory;
 - Install the dependencies for each repo (`npm i`);

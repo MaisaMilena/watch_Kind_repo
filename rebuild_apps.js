@@ -11,6 +11,7 @@ function build_modified_apps(payload) {
   let apps_to_rebuild = get_apps(payload);
   console.log("[!] Building apps. This may take a while.\n");
   chdir('../Kind/web');
+  update_dependencies();
   console.log(pull_master());
   apps_to_rebuild.forEach(app => {
     if (type_check_app(app)) {
@@ -30,7 +31,16 @@ function build_modified_apps(payload) {
 // TODO: do something to re-establish the server
 function got_build_error(app) {
   console.log("There is a type check error in "+app);
-  console.log("Check for the kind-lang global version.");
+  console.log("- Check for the kind-lang and js-beautify global version.");
+  console.log("- Update dependencies in Kind/web");
+}
+
+function update_dependencies() {
+  console.log("Updating global: king-lang and js-beautify.");
+  console.log("Updating Kind repo dependencies.");
+  execSync('npm i -g kind-lang');
+  execSync('npm i -g js-beautify');
+  execSync('npm i');
 }
 
 // Get a list of Apps to be built based on modified files
