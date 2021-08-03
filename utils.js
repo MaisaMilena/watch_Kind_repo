@@ -32,8 +32,13 @@ function is_App_updated(payload) {
 
 // Returns true if the payload is from "branch"
 function is_branch(branch, payload) {
-  const current_branch = payload["ref"]
-  return current_branch.endsWith(branch)
+  try {
+    const current_branch = payload["ref"]
+    return current_branch.endsWith(branch)
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
 }
 
 // TODO: will be used in the future
