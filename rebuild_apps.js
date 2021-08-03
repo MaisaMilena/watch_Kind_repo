@@ -76,8 +76,8 @@ function type_check_app(app_name) {
 // - check if is branch master
 // - check for conflict in pull
 function pull_master() {
-  cwd();
-  console.log("Pull master");
+  console.log("Currently dir: ", cwd());
+  console.log("[Kind repo] pull master");
   return String(execSync("git pull"));
 }
 
