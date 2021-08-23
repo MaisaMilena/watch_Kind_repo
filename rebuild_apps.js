@@ -1,31 +1,45 @@
 var { execSync } = require("child_process");
 var { chdir, cwd } = require('process');
+const { util } = require("webpack");
 var utils = require('./utils');
 
 // OBS: Require to be in "master" branch in Kind repository
 // Will pull updates from the master branch and compile the Apps
 
+function check_env() {
+  console.log("> Checking environment");
+  update_dependencies();
+  console.log("dir:", cwd());
+  if (!(utils.is_kind_folder())) { 
+    chdir('../Kind/web');
+    console.log("change dir to: ", cwd());
+  }
+  console.log(pull_master());
+}
+
 // Build apps from Kind/base/App
 // payload: sent from a webhook by GitHub
 function build_modified_apps(payload) {
   let apps_to_rebuild = get_apps(payload);
-  console.log("[!] Building apps. This may take a while.\n");
-  chdir('../Kind/web');
-  update_dependencies();
-  console.log(pull_master());
-  apps_to_rebuild.forEach(app => {
-    if (type_check_app(app)) {
-      const res = execSync('node build '+app, function (error, stdout, stderr) {
-          if(error) {
-            console.log(error.stack);
-          }
-          stdout;
-        });
-      console.log(String(res));
-    } else {
-      got_build_error(app);
-    }
-  })
+  console.log("[!] Building apps. This may take a while.");
+  console.log("-- "+new Date().toLocaleString('pt-BR')+" --\n");
+  if (!(utils.is_kind_folder("/web"))) { 
+    console.error("Couldn't change to Kind/web. This is required to build apps.")
+  } else {
+    apps_to_rebuild.forEach(app => {
+      if (type_check_app(app)) {
+        const res = execSync('node build '+app, function (error, stdout, stderr) {
+            if(error) {
+              console.log(error.stack);
+            }
+            stdout;
+          });
+        console.log(String(res));
+      } else {
+        got_build_error(app);
+      }
+    })
+  }
 }
 
 // TODO: do something to re-establish the server
@@ -42,6 +56,8 @@ function update_dependencies() {
   execSync('npm i -g js-beautify');
   execSync('npm i');
 }
+
+
 
 // Get a list of Apps to be built based on modified files
 function get_apps(payload) {
@@ -81,4 +97,4 @@ function pull_master() {
   return String(execSync("git pull"));
 }
 
-module.exports = { build_modified_apps }
+module.exports = { build_modified_apps, check_env }

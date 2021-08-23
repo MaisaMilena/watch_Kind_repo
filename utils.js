@@ -1,4 +1,7 @@
+const { execSync } = require('child_process');
 const { createHmac, timingSafeEqual } =  require('crypto');
+var { chdir, cwd } = require('process');
+
 require('dotenv/config');
 
 // Get files that were modified in every commit of the event "push" to
@@ -39,21 +42,6 @@ function is_branch(branch, payload) {
     console.log(e);
     return false;
   }
-}
-
-// TODO: will be used in the future
-// Change dir to ../Kind and execute Kind/web/build.js to build all apps
-function rebuild_apps(payload) {
-  console.log("Rebuild ALL apps in Kind/App");
-  let mod_apps = get_modified_Apps(get_modified_files(payload));
-
-  // const res = execSync("node rebuild_apps");
-  // return res;
-}
-
-function get_modified_Apps(files) {
-  console.log("Modified files: ", files);
-  return [];
 }
 
 function is_folder(path) {
@@ -101,5 +89,21 @@ function verify_signature(github_sig, body) {
   }
 }
 
-module.exports = { get_modified_files, is_App_updated, rebuild_apps, verify_signature, 
-  is_folder, get_app_folder, get_app_name}
+const is_kind_folder = (folder = "") => cwd().endsWith("Kind"+folder);
+const exec = (cmd) => console.log(String(execSync(cmd)));
+
+// TODO: check if it is installed if not, trow an error. 
+// Scheme is necessary to build App folders
+function install_scheme_target() {
+  console.log("> Installing Scheme ...");
+  // let scheme_target = "kind-scm_1.0.1-0_amd64.deb";
+  // console.log(execSync(`apt-get -d install ${scheme_target}`));
+  // console.log(execSync(`dpkg -i ${scheme_target}`));
+  exec("make");
+  exec("sudo make install");
+  exec("kind-scm");
+}
+
+
+module.exports = { get_modified_files, is_App_updated, verify_signature, is_folder, get_app_folder, get_app_name, install_scheme_target, is_kind_folder, exec}
+

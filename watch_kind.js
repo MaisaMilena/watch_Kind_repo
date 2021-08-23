@@ -4,7 +4,7 @@ const utils = require("./utils");
 const rebuild = require("./rebuild_apps");
 
 const app = express();
-const port = 3000;
+const port = 3086;
 
 app.use(body_parser.json());
 
@@ -16,20 +16,21 @@ app.get('/', (req, res) => {
 // Read more: https://docs.github.com/en/developers/webhooks-and-events/webhooks/about-webhooks
 app.post('/on_push', (req, res) => {
   const sig = req.get("X-Hub-Signature-256");
-  // if (utils.verify_signature(sig, req.body)) {
+  if (utils.verify_signature(sig, req.body)) {
     let rebuild_apps = utils.is_App_updated(req.body);
     if (rebuild_apps) {
+      rebuild.check_env();
       rebuild.build_modified_apps(req.body);
     } else {
       console.log("There isn't app to rebuild");
     }
     res.status(200).end();
-  // } else {
-  //   res.status(401).send("Unauthorized request. Verify if GitHub webhook is correctly configured.");
-  // }
+  } else {
+    res.status(401).send("Unauthorized request. Verify if GitHub webhook is correctly configured.");
+  }
 })
 
 app.listen(port, () => {
-  console.log(`Listening Kind repo on:${port}`)
+  console.log(`Listening Kind repo on: ${port}`)
 })
 
