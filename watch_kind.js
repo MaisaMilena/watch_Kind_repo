@@ -2,9 +2,10 @@ const express = require('express');
 const body_parser = require("body-parser");
 const utils = require("./utils");
 const rebuild = require("./rebuild_apps");
+require('dotenv/config');
 
 const app = express();
-const port = 3086;
+const port = process.env.PORT;
 
 app.use(body_parser.json());
 
