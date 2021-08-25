@@ -89,7 +89,8 @@ function verify_signature(github_sig, body) {
   }
 }
 
-const is_kind_folder = (folder = "") => cwd().endsWith("Kind"+folder);
+const is_kind_folder = (folder = "") => 
+  cwd() === process.env.KIND_REPOSITORY_PATH + folder;
 const exec = (cmd) => console.log(String(execSync(cmd)));
 
 // TODO: check if it is installed if not, trow an error. 
