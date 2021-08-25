@@ -17,7 +17,7 @@ app.get('/', (req, res) => {
 // Read more: https://docs.github.com/en/developers/webhooks-and-events/webhooks/about-webhooks
 app.post('/on_push', (req, res) => {
   const sig = req.get("X-Hub-Signature-256");
-  if (utils.verify_signature(sig, req.body) || process.env.DEV_ENV) {
+  if (utils.verify_signature(sig, req.body) || utils.is_dev_env()) {
     let rebuild_apps = utils.is_App_updated(req.body);
     if (rebuild_apps) {
       rebuild.check_env();

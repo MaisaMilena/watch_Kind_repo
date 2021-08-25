@@ -104,6 +104,14 @@ function install_scheme_target() {
   exec("kind-scm");
 }
 
+const is_dev_env = () => {
+  return process.env.ENV === "dev";
+}
 
-module.exports = { get_modified_files, is_App_updated, verify_signature, is_folder, get_app_folder, get_app_name, install_scheme_target, is_kind_folder, exec}
+const get_kind_web_env = () => {
+  return process.env.KIND_REPOSITORY_PATH+"/web";
+}
+
+
+module.exports = { get_modified_files, is_App_updated, verify_signature, is_folder, get_app_folder, get_app_name, install_scheme_target, is_kind_folder, exec, is_dev_env, get_kind_web_env}
 
