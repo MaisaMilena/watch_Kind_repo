@@ -2,19 +2,22 @@ var { execSync } = require("child_process");
 var { chdir, cwd } = require('process');
 const { util } = require("webpack");
 var utils = require('./utils');
+require('dotenv/config');
 
 // OBS: Require to be in "master" branch in Kind repository
 // Will pull updates from the master branch and compile the Apps
 
 function check_env() {
   console.log("> Checking environment");
-  update_dependencies();
-  console.log("dir:", cwd());
+  
   if (!(utils.is_kind_folder())) { 
-    chdir('../Kind/web');
+    chdir(process.env.KIND_REPOSITORY_PATH+"/web");
     console.log("change dir to: ", cwd());
   }
-  console.log(pull_master());
+  if(!process.env.DEV_ENV) {
+    update_dependencies();
+    console.log(pull_master());
+  } else { console.log("[dev-env] will not update dependencies and pull master") }
 }
 
 // Build apps from Kind/base/App
